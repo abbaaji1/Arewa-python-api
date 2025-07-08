@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify
 import subprocess
 import uuid
-import os  # 💡 An ƙara wannan domin magance kuskuren os not defined
+import os  # ✅ Wannan ne ake buƙata domin `os.environ.get(...)`
 
 app = Flask(__name__)
 
@@ -14,7 +14,6 @@ def download_video():
         return jsonify({"success": False, "message": "No URL provided."}), 400
 
     try:
-        # Use yt-dlp to get download URL in JSON format
         command = ["yt-dlp", "-j", url]
         result = subprocess.run(command, capture_output=True, text=True, check=True)
         info = eval(result.stdout)
