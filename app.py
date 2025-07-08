@@ -1,7 +1,7 @@
-
 from flask import Flask, request, jsonify
 import subprocess
 import uuid
+import os  # 💡 An ƙara wannan domin magance kuskuren os not defined
 
 app = Flask(__name__)
 
@@ -34,9 +34,9 @@ def download_video():
         else:
             return jsonify({"success": False, "message": "No downloadable MP4 links found."})
 
-    except subprocess.CalledProcessError as e:
+    except subprocess.CalledProcessError:
         return jsonify({"success": False, "message": "Error fetching video info."})
-    except Exception as e:
+    except Exception:
         return jsonify({"success": False, "message": "Server error."})
 
 @app.route("/", methods=["GET"])
