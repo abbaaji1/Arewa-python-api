@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify
 import subprocess
-import uuid
-import os  # ✅ Wannan ne ake buƙata domin `os.environ.get(...)`
+import os
+import json  # ✅ don json parsing
 
 app = Flask(__name__)
 
@@ -16,7 +16,7 @@ def download_video():
     try:
         command = ["yt-dlp", "-j", url]
         result = subprocess.run(command, capture_output=True, text=True, check=True)
-        info = eval(result.stdout)
+        info = json.loads(result.stdout)  # ✅ safer than eval()
 
         formats = info.get("formats", [])
         download_links = []
@@ -35,8 +35,8 @@ def download_video():
 
     except subprocess.CalledProcessError:
         return jsonify({"success": False, "message": "Error fetching video info."})
-    except Exception:
-        return jsonify({"success": False, "message": "Server error."})
+    except Exception as e:
+        return jsonify({"success": False, "message": f"Server error: {str(e)}"})
 
 @app.route("/", methods=["GET"])
 def home():
