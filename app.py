@@ -14,12 +14,12 @@ def download_video():
         return jsonify({"success": False, "message": "No URL provided."}), 400
 
     try:
-        # Add user-agent only
         command = [
             "yt-dlp",
+            "-j",
             "--user-agent",
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36",
-            "-j", url
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36",
+            url
         ]
         result = subprocess.run(command, capture_output=True, text=True, check=True)
         info = eval(result.stdout)
@@ -40,7 +40,7 @@ def download_video():
             return jsonify({"success": False, "message": "No downloadable MP4 links found."})
 
     except subprocess.CalledProcessError as e:
-        return jsonify({"success": False, "message": "Error fetching video info.", "error": e.stderr})
+        return jsonify({"success": False, "message": "Error fetching video info.", "error": str(e)})
     except Exception as e:
         return jsonify({"success": False, "message": "Server error.", "error": str(e)})
 
